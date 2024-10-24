@@ -5,6 +5,7 @@ export const IS_HEADLESS = false;
 export const LOGIN_URL = "https://gmember.melon.com/login/login_form.htm?langCd=EN";
 export const CONCERT_URL = "https://tkglobal.melon.com/performance/index.htm?langCd=EN&prodId=210489";
 export const NIGHT = 1; // 0-indexed. Which concert day are you looking for?
+export const YOUTUBE_VIDEO = "https://www.youtube.com/watch?v=Ngpf6UtPn4k"
 
 export const loadBrowser = async (page: Page, WEBSITE_URL: string) => {
   await page.goto(WEBSITE_URL);

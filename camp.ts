@@ -1,6 +1,6 @@
 import puppeteer, { Page } from 'puppeteer';
 import fs from 'fs';
-import { CONCERT_URL, COOKIES_JSON, delay, IS_HEADLESS, loadBrowser, NIGHT } from './shared';
+import { CONCERT_URL, COOKIES_JSON, delay, IS_HEADLESS, loadBrowser, NIGHT, YOUTUBE_VIDEO } from './shared';
 
 
 const loadCookies = async () => {
@@ -104,15 +104,9 @@ while (i < 10) { // change this to keep searching for longer
 if (i < 9999) {
   browser.close();
 } else {
-  const notify = await browser.newPage();
-  await loadBrowser(notify, "https://www.youtube.com/watch?v=Ngpf6UtPn4k&list=PLYSIJVnUvs9qyZt1oFLDEVT6iBN4pDBqE&index=41");
-
-  let button = notify.locator(".ytp-play-button")
-  while (button) {
-    button.click()
-    await notify.waitForNetworkIdle();
-    button = notify.locator(".ytp-play-button")
-  }
+  const youtube = await browser.newPage();
+  await loadBrowser(youtube, YOUTUBE_VIDEO + "&themeRefresh=1");
+  await youtube.locator(".ytp-play-button").click();
 }
 
 console.log(i, "is i. done.");
