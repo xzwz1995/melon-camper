@@ -1,9 +1,7 @@
 import puppeteer from 'puppeteer';
 import fs from 'fs';
 import CREDENTIALS from './credentials.json'
-import { loadBrowser, COOKIES_JSON, IS_HEADLESS } from './shared';
-
-const WEBSITE_URL = "https://gmember.melon.com/login/login_form.htm?langCd=EN"
+import { loadBrowser, COOKIES_JSON, IS_HEADLESS, LOGIN_URL } from './shared';
 
 const saveCookies = async () => {
   try {
@@ -28,7 +26,7 @@ const logIn = async () => {
 const browser = await puppeteer.launch({ headless: IS_HEADLESS });
 const page = await browser.newPage();
 
-await loadBrowser(page, WEBSITE_URL);
+await loadBrowser(page, LOGIN_URL);
 
 await logIn();
 await saveCookies();
