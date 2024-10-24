@@ -1,14 +1,7 @@
 import puppeteer, { Page } from 'puppeteer';
 import fs from 'fs';
-import { CONCERT_URL, IS_HEADLESS, loadBrowser } from './shared';
+import { CONCERT_URL, COOKIES_JSON, delay, IS_HEADLESS, loadBrowser, NIGHT } from './shared';
 
-const COOKIES_JSON = "./cookies.json"
-
-const delay = async (time: number) => {
-  return new Promise(function(resolve) { 
-      setTimeout(resolve, time)
-  });
-}
 
 const loadCookies = async () => {
   const cookiesData = fs.readFileSync(COOKIES_JSON, 'utf-8')
@@ -23,12 +16,14 @@ const loadCookies = async () => {
 const browser = await puppeteer.launch({ headless: IS_HEADLESS });
 const page = await browser.newPage();
 
-// Listen for the new tab
+
+// Listen for the ticket popup
+
 const newPagePromise = new Promise((resolve) => {
   browser.on('targetcreated', async (target) => {
     if (target.type() === 'page') {
       const newPage = await target.page();
-      await newPage.setViewport({ width: 1400, height: 1400 });
+      await newPage?.setViewport({ width: 1400, height: 1400 });
       resolve(newPage);
     }
   });
@@ -38,19 +33,20 @@ const newPagePromise = new Promise((resolve) => {
 await loadCookies();
 await loadBrowser(page, CONCERT_URL);
 
-// TDS3 Concert Page
-await page.locator('text/Sun, Dec 01, 2024').click();
-await page.waitForNetworkIdle();
-await page.locator('text/Get Tickets').click();
+
+const dates = await page.$$('#box_list_date #list_date li');
+await dates[NIGHT].click();
 await page.waitForNetworkIdle();
 
-// Skip login and cookies, only have to run this one
-// await logIn();
-// await saveCookies();
+await page.locator('.reservationBtn').click();
+await page.waitForNetworkIdle();
+
+
+// Seat selection opens in a popup
 
 const newPage = await newPagePromise as Page;
 
-await newPage.locator('text/To See the seats first, Click here').click();
+await newPage.locator('#btn_later').click();
 await newPage.waitForNetworkIdle();
 
 
@@ -67,24 +63,34 @@ for (const frame of frames) {
   }
 }
 
-const categories = await targetFrame?.$$('.box_seat_inner #divGradeSummary [id^=gd]')
+
+// Open each ticket category dropdown
+
+const categories = await targetFrame?.$$('.box_seat_inner #divGradeSummary [id^=gd]') || []
 for (const category of categories) {
   await category.click();
-  await delay(200);
 }
 
-const sections = await targetFrame?.$$('.box_list_area li');
 
+// Click through each section looking for seats
+
+const sections = await targetFrame?.$$('.box_list_area li') || []
 for (const section of sections) {
   await section.click();
-  // await delay(400); // might not need delay just wait for it to load?
-  await targetFrame?.waitForNavigation();
 
   const fills = await targetFrame?.$$eval('#ez_canvas svg rect', rects => rects.map(rect => rect.getAttribute('fill')));
 
-  const colours = new Set(fills)
-  if (colours.has("none")) colours.delete("none")
-  if (colours.size > 1) console.log("OMG!!!! THERE'S A SEAT:", colours)
+  const colours = new Set(fills);
+  colours.delete("none");
+  if (colours.size > 1) {
+    const secName = await (await section.getProperty('textContent')).jsonValue();
+    console.log("THERE'S A SEAT! Go to", secName);
+    break;
+  }
+
+  await delay(500);
 }
 
-console.log("done.")
+browser.close();
+
+console.log("done.");
