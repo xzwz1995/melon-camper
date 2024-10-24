@@ -75,22 +75,44 @@ for (const category of categories) {
 // Click through each section looking for seats
 
 const sections = await targetFrame?.$$('.box_list_area li') || []
-for (const section of sections) {
-  await section.click();
 
-  const fills = await targetFrame?.$$eval('#ez_canvas svg rect', rects => rects.map(rect => rect.getAttribute('fill')));
+let i = 0;
+while (i < 10) { // change this to keep searching for longer
 
-  const colours = new Set(fills);
-  colours.delete("none");
-  if (colours.size > 1) {
-    const secName = await (await section.getProperty('textContent')).jsonValue();
-    console.log("THERE'S A SEAT! Go to", secName);
-    break;
+  for (const section of sections) {
+    await section.click();
+
+    const fills = await targetFrame?.$$eval('#ez_canvas svg rect', rects => rects.map(rect => rect.getAttribute('fill')));
+
+    const colours = new Set(fills);
+    colours.delete("none");
+    if (colours.size > 1) {
+      const secName = await (await section.getProperty('textContent')).jsonValue();
+      console.log("THERE'S A SEAT! Go to", secName);
+
+      i = 9999; // to exit the "infinite" loop
+      break;
+    }
+
+    await delay(500);
   }
 
-  await delay(500);
+  i++
 }
 
-browser.close();
+// only close the browser if we DIDN'T find a ticket
+if (i < 9999) {
+  browser.close();
+} else {
+  const notify = await browser.newPage();
+  await loadBrowser(notify, "https://www.youtube.com/watch?v=Ngpf6UtPn4k&list=PLYSIJVnUvs9qyZt1oFLDEVT6iBN4pDBqE&index=41");
 
-console.log("done.");
+  let button = notify.locator(".ytp-play-button")
+  while (button) {
+    button.click()
+    await notify.waitForNetworkIdle();
+    button = notify.locator(".ytp-play-button")
+  }
+}
+
+console.log(i, "is i. done.");
