@@ -68,8 +68,10 @@ for (const frame of frames) {
 
 // Open ticket category dropdowns
 
-const categories =
+let categories =
   (await targetFrame?.$$(".box_seat_inner #divGradeSummary [id^=gd]")) || []
+
+if (!CHECK_BEST) categories = categories.slice(1)
 for (const category of categories) {
   await category.click()
 }
@@ -79,36 +81,39 @@ for (const category of categories) {
 const sections = (await targetFrame?.$$(".box_list_area li")) || []
 
 let i = 0
-while (i < 2) {
-  // change this to keep searching for longer
-
+while (i < 30) {
   for (const section of sections) {
-    await section.click()
+    const box = await section.boundingBox()
+    if (box) {
+      await section.click()
 
-    const fills = await targetFrame?.$$eval("#ez_canvas svg rect", (rects) =>
-      rects.map((rect) => rect.getAttribute("fill"))
-    )
+      const fills = await targetFrame?.$$eval("#ez_canvas svg rect", (rects) =>
+        rects.map((rect) => rect.getAttribute("fill"))
+      )
 
-    const colours = new Set(fills)
-    colours.delete("none")
-    if (colours.size > 1) {
-      const secName = await (
-        await section.getProperty("textContent")
-      ).jsonValue()
-      console.log("THERE'S A SEAT! Go to", secName)
+      const colours = new Set(fills)
+      colours.delete("none")
 
-      i = 9999 // to exit the "infinite" loop
-      break
+      if (colours.size > 1) {
+        const secName = await (
+          await section.getProperty("textContent")
+        ).jsonValue()
+        console.log("THERE'S A SEAT! Go to", secName)
+
+        i = 9999 // to exit the "infinite" loop
+        break
+      }
     }
 
     await delay(500)
   }
 
   i++
-  break
 }
 
-// only close the browser if we DIDN'T find a ticket
+// Only close the browser if we DIDN'T find a ticket
+// Otherwise, play a YouTube video to draw our attention
+
 if (i < 9999) {
   browser.close()
 } else {
@@ -117,4 +122,4 @@ if (i < 9999) {
   await youtube.locator(".ytp-play-button").click()
 }
 
-console.log(i, "is i. done.")
+console.log("After", i, "loops, we've finished.")
