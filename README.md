@@ -12,6 +12,8 @@ Melon Camper is a Python script that clicks through a concert on the Global Melo
 
 Then, it searches through the seats of your concert of choice, and notifies you if it finds any available tickets!
 
+https://github.com/user-attachments/assets/af11947c-b946-49db-9a70-0e49de896e50
+
 ## How To Use
 
 1. Make a copy of `TEMPLATE_credentials.json` and name it `credentials.json`. Then fill it out with your information.
@@ -34,3 +36,7 @@ Currently, it skips the captcha that appears when you open the seating chart, so
 Additionally, the alert system is pretty simple — it's just a tab that opens and plays a YouTube video. In the future, I imagine a more sophisticated way of notifying the user of a ticket. Perhaps a text message, in case you're letting Melon Camper run for hours while you're away from your computer ;)
 
 ### Thanks for reading!
+
+As a bonus, here's a picture from the concert <3
+
+<img src="https://github.com/user-attachments/assets/a74acc78-7da1-4345-9dcb-1154396f727c" width="300px" alt="NCT Dream" />
