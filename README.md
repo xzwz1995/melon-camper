@@ -8,7 +8,7 @@ However, tickets would sporadically pop up on the website — a seat would reapp
 
 ## How It Works
 
-Melon Camper is a Python script that clicks through a concert on the Global Melon website, then alerts you when a ticket is found! It uses Puppeteer to open a Chrome browser and log you into [tkglobal.melon.com](https://tkglobal.melon.com/main/index.htm?langCd=EN). You'll only need to log in once, because it saves the cookies for future usage.
+Made with TypeScript, Melon Camper clicks through a concert on the Global Melon website, then alerts you when a ticket is found! It uses Puppeteer to open a Chrome browser and log you into [tkglobal.melon.com](https://tkglobal.melon.com/main/index.htm?langCd=EN). You'll only need to log in once, because it saves the cookies for future usage.
 
 Then, it searches through the seats of your concert of choice, and notifies you if it finds any available tickets!
 
