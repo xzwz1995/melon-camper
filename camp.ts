@@ -6,6 +6,7 @@ import {
   CONCERT_URL,
   COOKIES_JSON,
   IS_HEADLESS,
+  LOOPS,
   NIGHT,
   YOUTUBE_VIDEO,
   delay,
@@ -81,7 +82,7 @@ for (const category of categories) {
 const sections = (await targetFrame?.$$(".box_list_area li")) || []
 
 let i = 0
-while (i < 30) {
+while (i < LOOPS) {
   for (const section of sections) {
     const box = await section.boundingBox()
     if (box) {
