@@ -1,6 +1,6 @@
 import fs from "fs"
 import puppeteer, { Page } from "puppeteer"
-const tempDir = 'C:\\Temp\\puppeteer_profile';
+const tempDir = 'C:\\Users\\work';
 import {
   CHECK_BEST,
   CONCERT_URL,
@@ -21,8 +21,11 @@ const loadCookies = async () => {
 
   await page.waitForNetworkIdle()
 }
-
-const browser = await puppeteer.launch({ headless: IS_HEADLESS })
+const browser = await puppeteer.launch({
+  userDataDir: tempDir,  
+  headless: IS_HEADLESS        
+});
+//const browser = await puppeteer.launch({ headless: IS_HEADLESS })
 const page = await browser.newPage()
 
 // Listen for the ticket popup
