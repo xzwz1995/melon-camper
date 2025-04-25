@@ -25,6 +25,7 @@ const logIn = async () => {
   await page.waitForNetworkIdle()
 }
 const browser = await puppeteer.launch({
+  executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
   userDataDir: tempDir,  
   headless: IS_HEADLESS        
 });
