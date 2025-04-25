@@ -4,6 +4,8 @@ import puppeteer from "puppeteer"
 import CREDENTIALS from "./credentials.json"
 import { COOKIES_JSON, IS_HEADLESS, LOGIN_URL, loadBrowser } from "./shared"
 
+const tempDir = 'C:\\Temp\\puppeteer_profile';
+
 const saveCookies = async () => {
   try {
     const cookies = await page.cookies()
@@ -22,8 +24,11 @@ const logIn = async () => {
 
   await page.waitForNetworkIdle()
 }
-
-const browser = await puppeteer.launch({ headless: IS_HEADLESS })
+const browser = await puppeteer.launch({
+  userDataDir: tempDir,  
+  headless: IS_HEADLESS        
+});
+//const browser = await puppeteer.launch({ headless: IS_HEADLESS })
 const page = await browser.newPage()
 
 await loadBrowser(page, LOGIN_URL)
