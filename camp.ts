@@ -1,6 +1,6 @@
 import fs from "fs"
 import puppeteer, { Page } from "puppeteer"
-
+const tempDir = 'C:\\Temp\\puppeteer_profile';
 import {
   CHECK_BEST,
   CONCERT_URL,
