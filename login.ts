@@ -4,7 +4,7 @@ import puppeteer from "puppeteer"
 import CREDENTIALS from "./credentials.json"
 import { COOKIES_JSON, IS_HEADLESS, LOGIN_URL, loadBrowser } from "./shared"
 
-const tempDir = 'C:\\Temp\\puppeteer_profile';
+const tempDir = 'C:\\Users\\work';
 
 const saveCookies = async () => {
   try {
