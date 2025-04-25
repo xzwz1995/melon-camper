@@ -27,7 +27,7 @@ export const CONCERT_URL =
  * For which of these days are you looking for tickets?
  * 0-indexed number.
  */
-export const NIGHT: number = 2
+export const NIGHT: number = 0
 
 /**
  * It's typically unlikely for the best tickets (for example, VIP/floor) to be found.
